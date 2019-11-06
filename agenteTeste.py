@@ -1,23 +1,12 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-import sys
-import schedule
-import threading
-from bairro import Bairro
-from multiprocessing import Lock, Process, Queue, current_process
+#!coding=utf-8
+# Hello world temporal in Pade!
+
 from pade.misc.utility import display_message, start_loop
 from pade.core.agent import Agent
 from pade.acl.aid import AID
 from pade.behaviours.protocols import TimedBehaviour
 from sys import argv
-
-lock = Lock()
-
-def j():    
-    app = QApplication(sys.argv)
-    teste = Bairro()
-    app.exec()
-
+import threading
 
 class ComportTemporal(TimedBehaviour):
     def __init__(self, agent, time):
@@ -42,7 +31,7 @@ def iniciarAgente():
     c = 0
     agents = list()
     for i in range(agents_per_process):
-        port = 20000 + c
+        port = int(argv[1]) + c
         agent_name = 'agent_hello_{}@localhost:{}'.format(port, port)
         agente_hello = AgenteHelloWorld(AID(name=agent_name))
         agents.append(agente_hello)
@@ -50,18 +39,7 @@ def iniciarAgente():
 
     start_loop(agents)
 
-
 if __name__ == '__main__':
-    p2 = Process(target=iniciarAgente, args=())
-    p2 .start()
-    p = Process(target=j, args=())
-    p .start()
-
-    p.join()
-    p2.join()
-
-
-
-
-#x = threading.Thread(target=j, args=(), daemon=True)
-#x.start()
+    #iniciarAgente()
+    x = threading.Thread(target=iniciarAgente, args=(), daemon=True)
+    x.start()
