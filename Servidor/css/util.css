@@ -1,0 +1,11 @@
+.casa {
+    background-color: #b5c2b7;
+    border-color: #424b54;
+    border-width: 1%;
+    border-style: solid;
+}
+
+
+.casaChamas {
+    background-color: red;
+}
