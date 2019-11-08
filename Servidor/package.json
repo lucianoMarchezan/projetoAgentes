@@ -1,0 +1,10 @@
+{
+    "name": "projeto_agentes",
+    "version": "0.0.1",
+    "description": "Um projeto para demonstrar o funcionamento de agentes",
+    "main": "interfaceDesktop.js",
+    "private": true,
+    "scripts": {
+      "start":"electron ."
+    }
+}
