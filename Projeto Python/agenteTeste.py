@@ -10,6 +10,7 @@ import threading
 import socket
 import requests
 import random
+import sys
 
 class ComportTemporal(TimedBehaviour):
     def __init__(self, agent, time):
@@ -36,9 +37,14 @@ class AgenteHelloWorld(Agent):
         super(AgenteHelloWorld, self).__init__(aid=aid, debug=False)
 
 
-        comp_temp = ComportTemporal(self, 1.0)
+        comp_temp = ComportTemporal(self, 5.0)
 
         self.behaviours.append(comp_temp)
+
+    def react(self, message):
+        display_message(self.aid.localname, 'Mensagem recebida')
+        if(message == "Processo Morto"):
+            sys.exit()
 
 
 def iniciarAgente():
@@ -46,7 +52,7 @@ def iniciarAgente():
     c = 0
     agents = list()
     for i in range(agents_per_process):
-        port = int(argv[1]) + c
+        port = int(20000 + c)
         agent_name = 'agent_hello_{}@localhost:{}'.format(port, port)
         agente_hello = AgenteHelloWorld(AID(name=agent_name))
         agents.append(agente_hello)

@@ -3,6 +3,16 @@
     border-color: #424b54;
     border-width: 1%;
     border-style: solid;
+    min-width: 80px;
+    min-height: 80px;
+}
+
+.casaCivil {
+    background-color: #537ec5
+}
+
+.casaBombeiro {
+    background-color: #ffdc34
 }
 
 

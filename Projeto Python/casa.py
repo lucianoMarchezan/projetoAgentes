@@ -4,34 +4,37 @@ from enum import Enum
 
 
 class State(Enum):
-    VAZIO = 0 #Casa está vazia
-    IN_FIRE = 1 #Casa está em chamas
-    FILLED = 2 #Casa está ocupada por alguém
+    VAZIO = "Vazio" #Casa está vazia
+    FOGO = "Fogo" #Casa está em chamas
+    POLICIAL = "Policial" #Casa está ocupada pelo policial
+    BOMBEIRO = "Bombeiro"#Casa está ocupada pelo bombeiro
+    INCENDIARIO = "Incediario"#Casa está ocupada pelo incendiário
+    CIVIL = "Civil"#Casa está ocupada pelo civil
+
+
+class Matriz(Enum):
+    COLUNAS = 10 #Número de colunas da matriz
+    LINHAS = 10 #Número de linhas da matriz
+
 
 class Casa():
 
     nameId = ""
-    state = State.VAZIO #Estado em que a casa está
-    occupant = None #Quem está ocupando a casa
-    casaWidgets = None  #Elemento da Interface gráfica dessa casa
+    state = State.VAZIO.value #Estado em que a casa está
+    coluna = 0
+    linha = 0
 
-    def __init__(self, nameId: str):
-        """
-        Parameters
-        ----------
-        name : str
-            Nome da casa que será usada para identificá-la
-        parent : QWidget
-            Parente que essa casa pertence
-        """
-        self.nameId = nameId
-        self.casaWidgets = QGroupBox()
-    
-    
-    def setState(self, state):
-        if state == State.IN_FIRE:
-            self.state = State.IN_FIRE
-        elif state == State.FILLED:
-            self.state = State.FILLED
-        else:
-            self.state = State.VAZIO
+    def __init__(self, linha, coluna):
+        self.linha = linha
+        self.coluna = coluna
+        self.nameId = "" + str(linha) + str(coluna)
+
+    def returnJsonObject(self):
+        jsonObject = {
+            "nameId": self.nameId,
+            "state": self.state,
+            "linha": self.linha,
+            "coluna": self.coluna
+        }
+        return jsonObject
+        
