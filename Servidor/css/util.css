@@ -8,17 +8,31 @@
 }
 
 .casaCivil {
-    background-color: #537ec5
+    background-image: url(img/civil.png);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .casaBombeiro {
-    background-color: #ffdc34
+    background-image: url(img/bomb.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .casaIncendiario {
-    background-color: rebeccapurple;
+    background-image: url(img/cj.png);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .casaChamas {
-    background-color: red;
+    background-image: url(img/fogo.gif);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.casaPolicial {
+    background-image: url(img/policial.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
