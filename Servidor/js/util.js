@@ -21,7 +21,7 @@ function criarMatriz() {
             let casa = document.createElement("div");
             casa.id = "" + i + j
             casa.className = "col casa";
-            casa.innerHTML = ""+i + j
+            casa.innerHTML = "" + i + j
             matrizLocal.push(casa);
             matrizGUI.appendChild(casa);
         }
@@ -49,20 +49,25 @@ require('electron').ipcRenderer.on('andar', (event, message) => {
     let proximaCasa = document.getElementById(message[mensagens.ID_PROXIMA_CASA]);
     let agente = document.createElement("div");
 
-    if(message[mensagens.STATE_PROXIMA_CASA] == "Vazio"){
+    if (message[mensagens.STATE_PROXIMA_CASA] == "Vazio") {
         console.log()
         proximaCasa.appendChild(agente);
         agente.innerHTML = '<h3> ' + message[mensagens.AGENTE] + ' <h3>';
-        
-        if(message[mensagens.AGENTE] == 'Civil'){
+
+        if (message[mensagens.AGENTE] == 'Civil') {
             proximaCasa.className = "col casa casaCivil";
-        }else if(message[2] == 'Bombeiro'){
+        } else if (message[mensagens.AGENTE] == 'Bombeiro') {
             proximaCasa.className = "col casa casaBombeiro";
+        } else if (message[mensagens.AGENTE] == 'Incendiario') {
+            if (message[mensagens.STATE_CASA] == 'Fogo') {
+                casaAtual.innerHTML == ''
+            }
+            proximaCasa.className = "col casa casaIncendiario";
         }
     }
 
     console.log(message[mensagens.STATE_CASA])
-    if(message[mensagens.STATE_CASA] == message[mensagens.AGENTE]){
+    if (message[mensagens.STATE_CASA] == message[mensagens.AGENTE]) {
         casaAtual.className = "col casa";
         casaAtual.innerHTML = message[mensagens.ID_CASA];
     }

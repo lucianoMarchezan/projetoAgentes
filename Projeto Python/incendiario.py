@@ -16,12 +16,12 @@ from casa import Casa, State, Matriz
 import pickle
 
 
-class ComportTemporal(TimedBehaviour):
+class Incendiar(TimedBehaviour):
     def __init__(self, agent, time):
-        super(ComportTemporal, self).__init__(agent, time)
+        super(Incendiar, self).__init__(agent, time)
 
     def on_time(self):
-        super(ComportTemporal, self).on_time()
+        super(Incendiar, self).on_time()
         proximaCasa = self.desireAndarProximaCasa()
 
         while(self.beliefVerificarCasa(proximaCasa)):
@@ -33,8 +33,8 @@ class ComportTemporal(TimedBehaviour):
         display_message(self.agent.aid.localname,
                         'Incendiario andando para '+proximaCasa.nameId)
 
-        tacar_fogo = random.randint(1,100)
-        if tacar_fogo < 40:
+        tacar_fogo = random.randint(1,10)
+        if tacar_fogo < 3:
             self.actionIncendiar(self.agent.casaAtual)
 
         self.actionAndar(proximaCasa)
@@ -70,7 +70,7 @@ class ComportTemporal(TimedBehaviour):
 
         casa = json.loads(casa.content)
 
-        if(casa['state'] == State.VAZIO.value):
+        if(casa['state'] == State.VAZIO.value) or (casa['state'] == State.FOGO.value):
             return False
         else:
             return True
@@ -110,7 +110,7 @@ class Incendiario(Agent):
     def __init__(self, aid):
         super(Incendiario, self).__init__(aid=aid, debug=False)
 
-        comp_temp = ComportTemporal(self, 1.0)
+        comp_temp = Incendiar(self, 2.0)
 
         self.behaviours.append(comp_temp)
 

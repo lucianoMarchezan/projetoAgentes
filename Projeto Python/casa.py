@@ -8,7 +8,7 @@ class State(Enum):
     FOGO = "Fogo" #Casa está em chamas
     POLICIAL = "Policial" #Casa está ocupada pelo policial
     BOMBEIRO = "Bombeiro"#Casa está ocupada pelo bombeiro
-    INCENDIARIO = "Incediario"#Casa está ocupada pelo incendiário
+    INCENDIARIO = "Incendiario"#Casa está ocupada pelo incendiário
     CIVIL = "Civil"#Casa está ocupada pelo civil
 
 
