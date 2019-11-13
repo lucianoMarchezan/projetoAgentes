@@ -52,7 +52,7 @@ require('electron').ipcRenderer.on('andar', (event, message) => {
     if (message[mensagens.STATE_PROXIMA_CASA] == "Vazio") {
         console.log()
         proximaCasa.appendChild(agente);
-        agente.innerHTML = '<h3> ' + message[mensagens.AGENTE] + ' <h3>';
+        //agente.innerHTML = '<h3> ' + message[mensagens.AGENTE] + ' <h3>';
 
         if (message[mensagens.AGENTE] == 'Civil') {
             proximaCasa.className = "col casa casaCivil";
