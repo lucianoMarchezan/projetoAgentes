@@ -22,14 +22,18 @@ class Passear(TimedBehaviour):
         display_message(self.agent.aid.localname, 'Civil Decidindo!')
         proximaCasa = self.desireAndarProximaCasa()
         casaBytes = pickle.dumps(proximaCasa.returnJsonObject())
+        estadoProximaCasa = self.beliefVerificarCasa(proximaCasa)
         
-        if(self.beliefVerificarCasa(proximaCasa)):
+        if(estadoProximaCasa == "Incendiario"):
+            self.agent.mandarMensagem(self.agent.policial.getPort(), self.agent.policial.getHost(), casaBytes)
+            display_message(self.agent.aid.localname, 'Olha o CJ!!!!')
+        elif(estadoProximaCasa == "Fogo"):
+            self.agent.mandarMensagem(self.agent.bombeiro.getPort(), self.agent.bombeiro.getHost(), casaBytes)
+            display_message(self.agent.aid.localname, 'FOOOOGOOOOOOOO!')
+        else:
             display_message(self.agent.aid.localname, 'Civil andando!')
             self.actionAndar(proximaCasa)
             display_message(self.agent.aid.localname, proximaCasa.nameId)
-        else:
-            self.agent.mandarMensagem(self.agent.bombeiro.getPort(), self.agent.bombeiro.getHost(), casaBytes)
-            display_message(self.agent.aid.localname, 'FOOOOGOOOOOOOO!')
         
 
 
@@ -62,12 +66,7 @@ class Passear(TimedBehaviour):
 
         casa = json.loads(casa.content)
 
-        if(casa['state'] == State.INCENDIARIO.value):
-            return False
-        elif(casa['state'] == State.FOGO.value):
-            return False
-        else:
-            return True
+        return casa['state']
 
     def actionAndar(self, proximaCasa):
         mensagem = {
@@ -89,12 +88,13 @@ class Civil(Agent):
     bombeiro = None
     policial = None
 
-    def __init__(self, aid, bombeiro):
+    def __init__(self, aid, bombeiro, policial):
         super(Civil, self).__init__(aid=aid, debug=False)
 
         self.bombeiro = bombeiro
+        self.policial = policial
 
-        comp_temp = Passear(self, 1.0)
+        comp_temp = Passear(self, 0.2)
 
         self.behaviours.append(comp_temp)
 

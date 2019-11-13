@@ -11,6 +11,7 @@ import random
 import json
 import pickle
 import threading
+import sys
 from comunicacao import ComunicacaoServer
 class ProcurarPolicial(TimedBehaviour):
 
@@ -18,7 +19,7 @@ class ProcurarPolicial(TimedBehaviour):
     def __init__(self, agent, time):
         super(ProcurarPolicial, self).__init__(agent, time)
         mensagem = {
-            "state": State.POLICIAL,
+            "state": State.POLICIAL.value,
             "casaAtual": json.dumps(self.agent.casaAtual.returnJsonObject())
         }
         requests.post("http://localhost:9000/PosicaoInicial", json=mensagem)
@@ -41,8 +42,7 @@ class ProcurarPolicial(TimedBehaviour):
         proximaCasa = self.escolherProximaCasa()
 
         if (proximaCasa != None and self.beliefVerificarCasa(proximaCasa)):
-            requests.post("http://localhost:9000/PrenderIncendiario", json=proximaCasa.returnJsonObject())
-
+            requests.get("http://localhost:9000/PrenderIncendiario")
         if proximaCasa != None and self.verificarFimChamado(proximaCasa):
             self.agent.casaChamado = None 
         else:
@@ -105,7 +105,7 @@ class ProcurarPolicial(TimedBehaviour):
 
 class Policial(Agent):
 
-    casaAtual = Casa(9,8)
+    casaAtual = Casa(9,0)
     respondendoChamado = True #True para testar
     casaChamado = None
     comunicacao = None
@@ -114,7 +114,7 @@ class Policial(Agent):
     def __init__(self, aid, portC):
         super(Policial, self).__init__(aid=aid, debug=False)
 
-        comp_temp = ProcurarPolicial(self,1.0)
+        comp_temp = ProcurarPolicial(self,0.3)
 
         self.behaviours.append(comp_temp)
 

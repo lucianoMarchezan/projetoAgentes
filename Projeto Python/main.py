@@ -5,7 +5,7 @@ from pade.misc.utility import display_message, start_loop
 from pade.core.agent import Agent
 from pade.acl.aid import AID
 from sys import argv
-import civil, bombeiro, incendiario
+import civil, bombeiro, incendiario, policial
 
 
 
@@ -23,9 +23,14 @@ if __name__ == '__main__':
     agente3 = bombeiro.Bombeiro(AID(name=nomeBombeiro), portC=10000)
     agents.append(agente3)
 
+    port = 20004
+    nomeBombeiro = 'policial_{}@localhost:{}'.format(port, port)
+    agente4 = policial.Policial(AID(name=nomeBombeiro), portC=10001)
+    agents.append(agente4)
+
     port = 20002
     agent_name = 'agent_civil_{}@localhost:{}'.format(port, port)
-    agente1 = civil.Civil(AID(name=agent_name), agente3)
+    agente1 = civil.Civil(AID(name=agent_name), agente3, agente4)
     agents.append(agente1)
 
     start_loop(agents)

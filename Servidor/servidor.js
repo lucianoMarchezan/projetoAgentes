@@ -87,6 +87,10 @@ app.post('/ApagarFogo', (req, res) => {
     }
 });
 
+app.get('/PrenderIncendiario', (req, res) => {
+    process.exit()
+});
+
 
 ////Comandos Civil/////
 

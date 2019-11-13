@@ -63,10 +63,11 @@ require('electron').ipcRenderer.on('andar', (event, message) => {
                 casaAtual.innerHTML == ''
             }
             proximaCasa.className = "col casa casaIncendiario";
+        }else if(message[mensagens.AGENTE] == 'Policial'){
+            proximaCasa.className = "col casa casaPolicial";
         }
     }
 
-    console.log(message[mensagens.STATE_CASA])
     if (message[mensagens.STATE_CASA] == message[mensagens.AGENTE]) {
         casaAtual.className = "col casa";
         casaAtual.innerHTML = message[mensagens.ID_CASA];
