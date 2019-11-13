@@ -60,7 +60,7 @@ app.post('/Andar', (req, res) => {
             proximaCasa.state = ordem.state;
         }
 
-        if(casa.state == ordem.state){
+        if (casa.state == ordem.state) {
             casa.state = "Vazio";
         }
 
@@ -113,7 +113,7 @@ app.post('/VerificarCasaIncendiario', (req, res) => {
 app.listen(9000, function() {
     console.log('Cenário Escutando na porta 9000!');
     criarMatriz();
-    abrirProcessoAgentes();
+    //abrirProcessoAgentes();
 });
 
 //Abre o processo de agentes
