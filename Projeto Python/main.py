@@ -19,14 +19,13 @@ if __name__ == '__main__':
     agents.append(agente2)
 
     port = 20003
-    agent_name = 'bombeiro'.format(port, port)
-    nomeBombeiro = AID(name=agent_name)
-    agente3 = bombeiro.Bombeiro(nomeBombeiro)
+    nomeBombeiro = 'bombeiro_{}@localhost:{}'.format(port, port)
+    agente3 = bombeiro.Bombeiro(AID(name=nomeBombeiro), portC=10000)
     agents.append(agente3)
 
     port = 20002
-    agent_name = 'agent_civil'.format(port, port)
-    agente1 = civil.Civil(AID(name=agent_name), nomeBombeiro)
+    agent_name = 'agent_civil_{}@localhost:{}'.format(port, port)
+    agente1 = civil.Civil(AID(name=agent_name), agente3)
     agents.append(agente1)
 
     start_loop(agents)

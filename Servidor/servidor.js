@@ -53,13 +53,19 @@ app.post('/Andar', (req, res) => {
         casas.push(casa.nameId);
         casas.push(proximaCasa.nameId);
         casas.push(ordem.state)
+        casas.push(casa.state)
+        casas.push(proximaCasa.state)
 
         if(proximaCasa.state == "Vazio"){
             proximaCasa.state = ordem.state;
-            casa.state = "Vazio";
-            win.webContents.send('andar', casas);
-            res.send("Movimento bem-sucedido!");
         }
+
+        if(casa.state == ordem.state){
+            casa.state = "Vazio";
+        }
+
+        win.webContents.send('andar', casas);
+        res.send("Movimento bem-sucedido!");
     }
 });
 

@@ -8,6 +8,7 @@ import requests
 import random
 import json
 import pickle
+import socket
 
 class Passear(TimedBehaviour):
 
@@ -27,7 +28,7 @@ class Passear(TimedBehaviour):
             self.actionAndar(proximaCasa)
             display_message(self.agent.aid.localname, proximaCasa.nameId)
         else:
-            self.agent.chamarBombeiro(casaBytes)
+            self.agent.mandarMensagem(self.agent.bombeiro.getPort(), self.agent.bombeiro.getHost(), casaBytes)
             display_message(self.agent.aid.localname, 'FOOOOGOOOOOOOO!')
         
 
@@ -61,10 +62,12 @@ class Passear(TimedBehaviour):
 
         casa = json.loads(casa.content)
 
-        if(casa['state'] == State.VAZIO.value):
-            return True
+        if(casa['state'] == State.INCENDIARIO.value):
+            return False
         elif(casa['state'] == State.FOGO.value):
             return False
+        else:
+            return True
 
     def actionAndar(self, proximaCasa):
         mensagem = {
@@ -83,19 +86,20 @@ class Passear(TimedBehaviour):
 class Civil(Agent):
 
     casaAtual = Casa(9,9)
-    nomeBombeiro = ""
+    bombeiro = None
 
-    def __init__(self, aid, nomeBombeiro):
+    def __init__(self, aid, bombeiro):
         super(Civil, self).__init__(aid=aid, debug=False)
 
-        self.nomeBombeiro = nomeBombeiro
+        self.bombeiro = bombeiro
 
         comp_temp = Passear(self, 1.0)
 
         self.behaviours.append(comp_temp)
 
-    def chamarBombeiro(self, casa):
-        message = ACLMessage(ACLMessage.INFORM)
-        message.add_receiver(self.nomeBombeiro)
-        message.set_content(casa)
-        self.send(message)
+    
+    def mandarMensagem(self, port, host, casa):
+        s = socket.socket()
+        s.connect((host, port))
+        s.send(casa)
+        s.close()
