@@ -29,12 +29,16 @@ app.post('/PosicaoInicial', (req, res) => {
     let ordem = req.body;
     let casa = JSON.parse(ordem.casaAtual);
     let state = ordem.state;
+    let listaOrdem = new Array();
+
 
     casa = matriz[casa.linha][casa.coluna]
+    listaOrdem.push(casa);
+    listaOrdem.push(ordem.state);
 
     if (casa.state == "Vazio") {
         casa.state = state;
-        win.webContents.send('posicaoInicial', casa.nameId);
+        win.webContents.send('posicaoInicial', listaOrdem);
         res.send("Movimento bem-sucedido!");
     }
 
@@ -113,7 +117,7 @@ app.post('/VerificarCasaIncendiario', (req, res) => {
 app.listen(9000, function() {
     console.log('Cenário Escutando na porta 9000!');
     criarMatriz();
-    //abrirProcessoAgentes();
+    abrirProcessoAgentes();
 });
 
 //Abre o processo de agentes

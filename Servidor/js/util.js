@@ -50,9 +50,9 @@ require('electron').ipcRenderer.on('andar', (event, message) => {
     let agente = document.createElement("div");
 
     if (message[mensagens.STATE_PROXIMA_CASA] == "Vazio") {
-        console.log()
         proximaCasa.appendChild(agente);
         agente.innerHTML = '<h3> ' + message[mensagens.AGENTE] + ' <h3>';
+        console.log(message[mensagens.STATE_CASA] + "na casa ")
 
         if (message[mensagens.AGENTE] == 'Civil') {
             proximaCasa.className = "col casa casaCivil";
@@ -75,13 +75,16 @@ require('electron').ipcRenderer.on('andar', (event, message) => {
 });
 
 require('electron').ipcRenderer.on('posicaoInicial', (event, message) => {
-    let casaAtual = document.getElementById(message);
-    let bombeiro = document.createElement("div");
+    let casa = message[0];
+    let tipoAgente = message[1];
+    let casaAtual = document.getElementById(casa.nameId);
+    let agente = document.createElement("div");
 
-    bombeiro.innerHTML = '<h3> B <h3>';
-    casaAtual.innerHTML = message;
-    casaAtual.className = "col casa";
-    proximaCasa.appendChild(bombeiro);
-    proximaCasa.className = "col casa casaBombeiro";
+    if(tipoAgente == "Bombeiro"){
+        casaAtual.className = "col casa casaBombeiro";
+    }else{
+        casaAtual.className = "col casa casaPolicial";
+    }
+    casaAtual.appendChild(agente);
 
 });

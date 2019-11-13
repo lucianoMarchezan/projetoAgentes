@@ -87,6 +87,7 @@ class Civil(Agent):
 
     casaAtual = Casa(9,9)
     bombeiro = None
+    policial = None
 
     def __init__(self, aid, bombeiro):
         super(Civil, self).__init__(aid=aid, debug=False)

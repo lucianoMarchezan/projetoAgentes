@@ -12,21 +12,21 @@ import json
 import pickle
 import threading
 from comunicacao import ComunicacaoServer
-class ResponderChamado(TimedBehaviour):
+class ProcurarPolicial(TimedBehaviour):
 
     
     def __init__(self, agent, time):
-        super(ResponderChamado, self).__init__(agent, time)
+        super(ProcurarPolicial, self).__init__(agent, time)
         mensagem = {
-            "state": State.BOMBEIRO.value,
+            "state": State.POLICIAL,
             "casaAtual": json.dumps(self.agent.casaAtual.returnJsonObject())
         }
         requests.post("http://localhost:9000/PosicaoInicial", json=mensagem)
 
     
     def on_time(self):
-        super(ResponderChamado, self).on_time()
-        display_message(self.agent.aid.localname, 'Bombeiro Decidindo!')
+        super(ProcurarPolicial, self).on_time()
+        display_message(self.agent.aid.localname, 'Pocial Decidindo!')
 
         if(self.agent.casaChamado != None):
             self.moverAteLocal()
@@ -39,10 +39,9 @@ class ResponderChamado(TimedBehaviour):
         
     def moverAteLocal(self):
         proximaCasa = self.escolherProximaCasa()
-        jsonCasa = json.dumps(proximaCasa.returnJsonObject())
 
         if (proximaCasa != None and self.beliefVerificarCasa(proximaCasa)):
-            requests.post("http://localhost:9000/ApagarFogo", json=proximaCasa.returnJsonObject())
+            requests.post("http://localhost:9000/PrenderIncendiario", json=proximaCasa.returnJsonObject())
 
         if proximaCasa != None and self.verificarFimChamado(proximaCasa):
             self.agent.casaChamado = None 
@@ -62,7 +61,7 @@ class ResponderChamado(TimedBehaviour):
             "tipoMensagem":"andar",
             "proximaCasa": json.dumps(proximaCasa.returnJsonObject()),
             "casaAtual": json.dumps(self.agent.casaAtual.returnJsonObject()),
-            "state": State.BOMBEIRO.value
+            "state": State.POLICIAL.value
         }
 
         resposta = requests.post("http://localhost:9000/Andar", json=mensagem)
@@ -82,7 +81,7 @@ class ResponderChamado(TimedBehaviour):
 
         if(casa['state'] == State.VAZIO.value):
             return False
-        elif(casa['state'] == State.FOGO.value):
+        elif(casa['state'] == State.INCENDIARIO.value):
             return True
 
     def escolherProximaCasa(self):
@@ -104,7 +103,7 @@ class ResponderChamado(TimedBehaviour):
 
         return Casa(linhaProximaCasa, colunaProximaCasa)
 
-class Bombeiro(Agent):
+class Policial(Agent):
 
     casaAtual = Casa(9,8)
     respondendoChamado = True #True para testar
@@ -113,9 +112,9 @@ class Bombeiro(Agent):
     chamados = deque([])
 
     def __init__(self, aid, portC):
-        super(Bombeiro, self).__init__(aid=aid, debug=False)
+        super(Policial, self).__init__(aid=aid, debug=False)
 
-        comp_temp = ResponderChamado(self,1.0)
+        comp_temp = ProcurarPolicial(self,1.0)
 
         self.behaviours.append(comp_temp)
 
@@ -137,6 +136,3 @@ class Bombeiro(Agent):
 
     def getHost(self):
         return self.comunicacao.host
-
-    
-        
