@@ -12,11 +12,11 @@ import json
 import pickle
 import threading
 from comunicacao import ComunicacaoServer
-class ResponderChamado(TimedBehaviour):
+class ProcurarIncediario(TimedBehaviour):
 
     
     def __init__(self, agent, time):
-        super(ResponderChamado, self).__init__(agent, time)
+        super(ProcurarIncediario, self).__init__(agent, time)
         mensagem = {
             "state": State.BOMBEIRO.value,
             "casaAtual": json.dumps(self.agent.casaAtual.returnJsonObject())
@@ -25,7 +25,7 @@ class ResponderChamado(TimedBehaviour):
 
     
     def on_time(self):
-        super(ResponderChamado, self).on_time()
+        super(ProcurarIncediario, self).on_time()
         display_message(self.agent.aid.localname, 'Bombeiro Decidindo!')
 
         if(self.agent.casaChamado != None):
@@ -104,7 +104,7 @@ class ResponderChamado(TimedBehaviour):
 
         return Casa(linhaProximaCasa, colunaProximaCasa)
 
-class Bombeiro(Agent):
+class Policial(Agent):
 
     casaAtual = Casa(9,8)
     respondendoChamado = True #True para testar
@@ -113,10 +113,9 @@ class Bombeiro(Agent):
     chamados = deque([])
 
     def __init__(self, aid, portC):
-        super(Bombeiro, self).__init__(aid=aid, debug=False)
+        super(Policial, self).__init__(aid=aid, debug=False)
 
-        comp_temp = ResponderChamado(self,1.0)
-        chamado = ChamadoBombeiroRequest(self)
+        comp_temp = ProcurarIncediario(self,1.0)
 
         self.behaviours.append(comp_temp)
 
@@ -139,19 +138,6 @@ class Bombeiro(Agent):
     def getHost(self):
         return self.comunicacao.host
 
-
-
-class ChamadoBombeiroRequest(FipaRequestProtocol):
-    """FIPA Request Behaviour do chamado do bombeiro.
-    """
-    def __init__(self, agent):
-        super(ChamadoBombeiroRequest, self).__init__(agent=agent,
-                                          message=None,
-                                          is_initiator=False)
-
-    def handle_request(self, message):
-        super(ChamadoBombeiroRequest, self).handle_request(message)
-        display_message(self.agent.aid.localname, 'request message received')
 
     
         
