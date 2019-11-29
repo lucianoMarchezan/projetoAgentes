@@ -39,17 +39,23 @@ class ResponderChamado(TimedBehaviour):
         
     def moverAteLocal(self):
         proximaCasa = self.escolherProximaCasa()
-        jsonCasa = json.dumps(proximaCasa.returnJsonObject())
+        casaBytes = pickle.dumps(proximaCasa.returnJsonObject())
+        estadoProximaCasa = self.beliefVerificarCasa(proximaCasa)
 
-        if (proximaCasa != None and self.beliefVerificarCasa(proximaCasa)):
+        if(estadoProximaCasa == "Incendiario"):
+            self.agent.mandarMensagem(self.agent.policial.getPort(), self.agent.policial.getHost(), casaBytes)
+            display_message(self.agent.aid.localname, 'Bombeiro chamou policia')
+        elif(estadoProximaCasa == "Fogo"):
             requests.post("http://localhost:9000/ApagarFogo", json=proximaCasa.returnJsonObject())
-
-        if proximaCasa != None and self.verificarFimChamado(proximaCasa):
-            self.agent.casaChamado = None 
+            display_message(self.agent.aid.localname, 'Apagando fogo!')
         else:
-            self.actionAndar(proximaCasa)
-            display_message(self.agent.aid.localname, 'Movendo para!' + proximaCasa.nameId)
+            if proximaCasa != None and self.verificarFimChamado(proximaCasa):
+                self.agent.casaChamado = None 
+            else:
+                self.actionAndar(proximaCasa)
+                display_message(self.agent.aid.localname, 'Movendo para!' + proximaCasa.nameId)
 
+        
 
     def verificarFimChamado(self, proximaCasa):
         if(proximaCasa.linha == self.agent.casaChamado.linha):
@@ -80,10 +86,7 @@ class ResponderChamado(TimedBehaviour):
 
         casa = json.loads(casa.content)
 
-        if(casa['state'] == State.VAZIO.value):
-            return False
-        elif(casa['state'] == State.FOGO.value):
-            return True
+        return casa['state']
 
     def escolherProximaCasa(self):
         colunaCasaAtual = self.agent.casaAtual.coluna
@@ -115,7 +118,7 @@ class Bombeiro(Agent):
     def __init__(self, aid, portC):
         super(Bombeiro, self).__init__(aid=aid, debug=False)
 
-        comp_temp = ResponderChamado(self,1.0)
+        comp_temp = ResponderChamado(self,0.4)
 
         self.behaviours.append(comp_temp)
 
