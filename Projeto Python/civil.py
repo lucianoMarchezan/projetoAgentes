@@ -94,7 +94,7 @@ class Civil(Agent):
         self.bombeiro = bombeiro
         self.policial = policial
 
-        comp_temp = Passear(self, 0.2)
+        comp_temp = Passear(self, 0.06)
 
         self.behaviours.append(comp_temp)
 

@@ -34,7 +34,7 @@ class Incendiar(TimedBehaviour):
                         'Incendiario andando para '+proximaCasa.nameId)
 
         tacar_fogo = random.randint(1,10)
-        if tacar_fogo < 4:
+        if tacar_fogo <= 3:
             self.actionIncendiar(self.agent.casaAtual)
 
         self.actionAndar(proximaCasa)

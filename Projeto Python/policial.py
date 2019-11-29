@@ -29,6 +29,7 @@ class ProcurarPolicial(TimedBehaviour):
         super(ProcurarPolicial, self).on_time()
         display_message(self.agent.aid.localname, 'Pocial Decidindo!')
 
+        
         if(self.agent.casaChamado != None):
             self.moverAteLocal()
         elif(not (len(self.agent.chamados) == 0)):
@@ -40,14 +41,20 @@ class ProcurarPolicial(TimedBehaviour):
         
     def moverAteLocal(self):
         proximaCasa = self.escolherProximaCasa()
+        casaBytes = pickle.dumps(proximaCasa.returnJsonObject())
+        estadoProximaCasa = self.beliefVerificarCasa(proximaCasa)
 
-        if (proximaCasa != None and self.beliefVerificarCasa(proximaCasa)):
+        if(estadoProximaCasa == "Incendiario"):
             requests.get("http://localhost:9000/PrenderIncendiario")
-        if proximaCasa != None and self.verificarFimChamado(proximaCasa):
-            self.agent.casaChamado = None 
+        elif(estadoProximaCasa == "Fogo"):
+            self.agent.mandarMensagem(self.agent.bombeiro.getPort(), self.agent.bombeiro.getHost(), casaBytes)
+            display_message(self.agent.aid.localname, 'FOOOOGOOOOOOOO!')
         else:
-            self.actionAndar(proximaCasa)
-            display_message(self.agent.aid.localname, 'Movendo para!' + proximaCasa.nameId)
+            if proximaCasa != None and self.verificarFimChamado(proximaCasa):
+                self.agent.casaChamado = None 
+            else:
+                self.actionAndar(proximaCasa)
+                display_message(self.agent.aid.localname, 'Movendo para!' + proximaCasa.nameId)
 
 
     def verificarFimChamado(self, proximaCasa):
@@ -70,6 +77,7 @@ class ProcurarPolicial(TimedBehaviour):
             self.agent.casaAtual = proximaCasa               
 
     
+    #Verifica a situação da próxima casa
     def beliefVerificarCasa(self, proximaCasa):
         mensagem = {
             "tipoMensagem":"verificarCasa",
@@ -79,10 +87,8 @@ class ProcurarPolicial(TimedBehaviour):
 
         casa = json.loads(casa.content)
 
-        if(casa['state'] == State.VAZIO.value):
-            return False
-        elif(casa['state'] == State.INCENDIARIO.value):
-            return True
+        return casa['state']
+
 
     def escolherProximaCasa(self):
         colunaCasaAtual = self.agent.casaAtual.coluna
