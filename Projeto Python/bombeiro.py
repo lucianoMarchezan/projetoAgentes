@@ -11,6 +11,7 @@ import random
 import json
 import pickle
 import threading
+import socket
 from comunicacao import ComunicacaoServer
 class ResponderChamado(TimedBehaviour):
 
@@ -114,6 +115,7 @@ class Bombeiro(Agent):
     casaChamado = None
     comunicacao = None
     chamados = deque([])
+    policial = None
 
     def __init__(self, aid, portC):
         super(Bombeiro, self).__init__(aid=aid, debug=False)
@@ -133,6 +135,13 @@ class Bombeiro(Agent):
          
             if(casa not in self.chamados):
                 self.chamados.append(casa)
+    
+
+    def mandarMensagem(self, port, host, casa):
+        s = socket.socket()
+        s.connect((host, port))
+        s.send(casa)
+        s.close()
 
 
     def getPort(self):
